@@ -2,11 +2,13 @@ http:
 
   # Redirect to https
   middlewares:
+    
     redirect_https:
       redirectScheme:
         scheme: https
         permanent: true
-    secure_site:
+    
+    lemmy_site:
       headers:
         stsIncludeSubdomains: false
         stsPreload: true
@@ -14,8 +16,12 @@ http:
         isDevelopment: false
         customResponseHeaders:
           server: ""
-        frameDeny: false
+        frameDeny: true
         browserXssFilter: true
+      rateLimit:
+        average: 100
+        burst: 50
+
 
   routers:
 

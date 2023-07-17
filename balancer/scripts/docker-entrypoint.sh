@@ -1,6 +1,14 @@
 #!/bin/sh
 
-envsubst -i /template/traefik.template.yaml -o /etc/traefik/traefik.yaml
+# if CLOUDFLARE_EMAIL is "" then we will use the default LE DNS Challenge
+if [ ! -z "${CLOUDFLARE_EMAIL}" ];
+then
+    echo "Using CloudFlare Challenge"
+    envsubst -i /template/traefik.cloudflare.yaml -o /etc/traefik/traefik.yaml
+else
+    echo "Using Default DNS Challenge"
+    envsubst -i /template/traefik.dns.yaml -o /etc/traefik/traefik.yaml
+fi
 
 # cleanup logs
 rm /logs/access.log | true

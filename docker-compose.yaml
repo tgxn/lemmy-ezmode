@@ -22,8 +22,8 @@ services:
       TRAEFIK_ACME_CA_SERVER: ${TRAEFIK_ACME_CA_SERVER}
       
       # for CloudFlare DNS Validation
-      CLOUDFLARE_EMAIL: ${TRAEFIK_CF_API_EMAIL}
-      CLOUDFLARE_DNS_API_TOKEN: ${TRAEFIK_CF_DNS_API_TOKEN}
+      CLOUDFLARE_EMAIL: ${TRAEFIK_CF_API_EMAIL:-""}
+      CLOUDFLARE_DNS_API_TOKEN: ${TRAEFIK_CF_DNS_API_TOKEN:-""}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro" # mount the docker socket
       - "./volumes/balancer/certs:/certs"
@@ -35,7 +35,7 @@ services:
       - "443:443"
 
   postgres:
-    image: postgres:15-alpine
+    image: postgres:${PG_VERSION:-15-alpine}
     environment:
       - POSTGRES_USER=lemmy
       - POSTGRES_DB=lemmy
@@ -59,7 +59,7 @@ services:
       - lemmy-traefik-net
 
   pictrs:
-    image: asonix/pictrs:0.3.3
+    image: asonix/pictrs:${PICTRS_VERSION:-0.3.3}
     depends_on:
       - balancer
     user: 991:991
@@ -114,7 +114,7 @@ services:
         )"
       - "traefik.http.routers.lemmy_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_https_net.tls.certResolver=cert_resolver"
-      - "traefik.http.routers.lemmy_https_net.middlewares=secure_site@file"
+      - "traefik.http.routers.lemmy_https_net.middlewares=lemmy_site@file"
 
       # Lemmy Internet HTTP Redirect
       - "traefik.http.routers.lemmy_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"
@@ -158,7 +158,7 @@ services:
         )"
       - "traefik.http.routers.lemmy_ui_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_ui_https_net.tls.certResolver=cert_resolver"
-      - "traefik.http.routers.lemmy_ui_https_net.middlewares=secure_site@file"
+      - "traefik.http.routers.lemmy_ui_https_net.middlewares=lemmy_site@file"
 
       # Lemmy Internet HTTP Redirect
       - "traefik.http.routers.lemmy_ui_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"
