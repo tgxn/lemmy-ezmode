@@ -18,6 +18,10 @@ jobs:
 
       - name: create test configuration
         run: |
+          rm ./volumes -rf
+
+          chmod a+x ./config/config-entrypoint.sh
+
           echo "COMPOSE_PROJECT_NAME=lemmy_ezmode"       > .env
 
           echo "LEMMY_DOMAIN=test.local" >> .env
@@ -38,6 +42,9 @@ jobs:
 
       - name: check stack status
         run: docker-compose ps
+
+      - name: run tests
+        run: ./test/test.sh
 
       - name: stop stack
         if: always()
