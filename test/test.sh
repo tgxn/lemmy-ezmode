@@ -22,6 +22,7 @@ if [ $fe_contains -eq 1 ]
 then
     echo "✅ Frontend Returns Lemmy Instance Setup"
 else
+    echo $fe_response
     echo "❌ Frontend Does Not Return Lemmy Instance Setup"
     exit 1
 fi
@@ -33,6 +34,7 @@ if [ $nodeinfo_contains -eq 1 ]
 then
     echo "✅ Node Info returns Lemmy Version"
 else
+    echo $nodeinfo_response
     echo "❌ Node Info does not return Lemmy Version"
     exit 1
 fi
@@ -52,6 +54,7 @@ if [ $api_contains -eq 1 ]
 then
     echo "✅ API returns ActivityPub User"
 else
+    echo $api_response
     echo "❌ API does not return ActivityPub User"
     exit 1
 fi
