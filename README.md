@@ -4,6 +4,8 @@ The idea here is you clone this repo, and configure your `.env` and then bring t
 
 There are a couple of ways to deploy Lemmy, I like deploying it using Traefik as the reverse proxy, I made this since the ansible template is hard to get running, and doesn't support Traefik.
 
+I have added some really basic tests to make sure this stack always brings up a working container (at least in GitHub Workflows)
+
 # Usage
 
 1. Clone: `git clone https://github.com/tgxn/lemmy-ezmode.git`
