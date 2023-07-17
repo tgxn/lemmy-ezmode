@@ -3,9 +3,7 @@
 version: "3.6"
 
 networks:
-  lemmy-public-net:
-    driver: bridge
-  lemmy-private-net:
+  lemmy-traefik-net:
     driver: bridge
 
 services:
@@ -14,7 +12,7 @@ services:
   balancer:
     image: balancer:local
     networks:
-      - lemmy-public-net
+      - lemmy-traefik-net
     build:
       context: ./balancer
       dockerfile: Dockerfile
@@ -42,7 +40,7 @@ services:
       - POSTGRES_DB=lemmy
       - POSTGRES_PASSWORD=${POSTGRES_PASS}
     networks:
-      - lemmy-private-net
+      - lemmy-traefik-net
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
       - ./config/postgresql.conf:/etc/postgresql.conf
@@ -54,7 +52,7 @@ services:
       - balancer
     user: 991:991
     networks:
-      - lemmy-private-net
+      - lemmy-traefik-net
     environment:
       - PICTRS__SERVER__API_KEY=${PICTRS_API_KEY}
     volumes:
@@ -66,8 +64,7 @@ services:
     image: dessalines/lemmy:${LEMMY_VERSION}
     command: /config/entrypoint.sh
     networks:
-      - lemmy-private-net
-      - lemmy-public-net
+      - lemmy-traefik-net
     restart: always
     environment:
       #- RUST_LOG="warn,lemmy_server=debug,lemmy_api=debug,lemmy_api_common=debug,lemmy_api_crud=debug,lemmy_apub=debug,lemmy_db_schema=debug,lemmy_db_views=debug,lemmy_db_views_actor=debug,lemmy_db_views_moderator=debug,lemmy_routes=debug,lemmy_utils=debug,lemmy_websocket=debug"
@@ -84,7 +81,7 @@ services:
       - pictrs
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=lemmy-public-net"
+      - "traefik.docker.network=lemmy-traefik-net"
       - "traefik.http.services.lemmy.loadbalancer.server.port=8536"
 
       # Lemmy UI Internet HTTPS
@@ -125,11 +122,10 @@ services:
       - balancer
       - lemmy
     networks:
-      - lemmy-private-net
-      - lemmy-public-net
+      - lemmy-traefik-net
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=lemmy-public-net"
+      - "traefik.docker.network=lemmy-traefik-net"
       - "traefik.http.services.lemmy_ui.loadbalancer.server.port=1234"
 
       # Lemmy UI Internet HTTPS
