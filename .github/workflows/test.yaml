@@ -1,0 +1,44 @@
+name: test-stack
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: test
+  cancel-in-progress: false
+
+jobs:
+  test_stack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: create test configuration
+        run: |
+          echo "COMPOSE_PROJECT_NAME=lemmy_ezmode"       > .env
+
+          echo "LEMMY_DOMAIN=test.local" >> .env
+          echo "LEMMY_VERSION=latest" >> .env
+          echo "LEMMY_UI_VERSION=latest" >> .env
+
+          echo "POSTGRES_PASS=testing_pass" >> .env
+          echo "PICTRS_API_KEY=testing_key" >> .env
+          
+          echo "LETSENCRYPT_EMAIL=nothing@example.com" >> .env
+          echo "TRAEFIK_ACME_CA_SERVER=https://acme-staging-v02.api.letsencrypt.org/directory" >> .env
+
+          echo "PGADMIN_DEFAULT_EMAIL=example@example.com" >> .env
+          echo "PGADMIN_DEFAULT_PASSWORD=pgadmin_test_pass" >> .env
+
+      - name: start stack
+        run: docker-compose up -d --build --force-recreate
+
+      - name: check stack status
+        run: docker-compose ps
+
+      - name: stop stack
+        if: always()
+        run: docker-compose down
