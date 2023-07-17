@@ -1,29 +1,41 @@
-# Lemmy EZMode
+# Lemmy EZ-Mode
 
-I made this since the ansible template is hard to get running.
+The idea here is you clone this repo, and configure your `.env` and then bring the compose stack online, and you should have a functioning lemmy instance.
 
- > The idea here is you clone this repo, and configure your `.env` and then bring the compose stack online, and you should have a functioning lemmy isntance.
-
-This uses Traefik Reverse proxy to fetch and renew your certs, local directories for data persistency, and sane defaults.
+There are a couple of ways to deploy Lemmy, I like deploying it using Traefik as the reverse proxy, I made this since the ansible template is hard to get running, and doesn't support Traefik.
 
 # Usage
 
-1. Clone this repo: `git clone https://github.com/tgxn/lemmy-ezmode.git`
-2. Copy `.env.example` & configure `.env` file.
-3. Run `docker-compose up -d` or `docker compose up -d`
-4. ???
-5. Access on `LEMMY_BASE` URL
-6. Profit...
+1. Clone: `git clone https://github.com/tgxn/lemmy-ezmode.git`
+2. Configure: Copy `.env.example` to `.env` and edit the values
+3. Start: `docker-compose up -d`
+4. Access: Visit the `LEMMY_BASE` URL
 
-**Traefik dashboard will run on :81, firewall this off to your IP only.**
+# Included Services
+
+## Lemmy Services
+
+- Traefik Balancer
+ > Runs on port 80, and 443
+
+- Lemmy & Lemmy-UI Server
+ > These run on the docker network, and are not exposed to the host.
+
+## Admin Services
+These bind to local ports, and should only be accessible from your IPs.
+
+**These are admin services, firewall them off to your IP only.**
+
+- Traefik Admin Panel
+ > Runs on port 81
+
+- pgAdmin4 Container
+ > Runs on port 82
+
 
 # What/How
 
 This uses a Traefik server to reverse proxy to the Lemmy server.
-It also uses the Traefik ACME challenge to automatically fetch and renew your certs.
+It uses the Traefik ACME challenge to automatically fetch and renew your certs.
 
-## Advanced
-
-@TODO
-
-If you have your own Traefik server, you can use the `docker-compose.own-traefik.yaml` to use docker labels to instead setup the proxy
+You can optionally configure cloudflare credentials to automate SSL Certificate Verification with DNS.
