@@ -8,12 +8,12 @@ This uses Traefik Reverse proxy to fetch and renew your certs, local directories
 
 # Usage
 
-Clone this repo first.
-
-1. Copy `.env.example` & configure `.env` file.
-2. Run `docker-compose up -d`
-3. ???
-4. Access on `LEMMY_BASE` URL -> Profit
+1. Clone this repo: `git clone https://github.com/tgxn/lemmy-ezmode.git`
+2. Copy `.env.example` & configure `.env` file.
+3. Run `docker-compose up -d` or `docker compose up -d`
+4. ???
+5. Access on `LEMMY_BASE` URL
+6. Profit...
 
 **Traefik dashboard will run on :81, firewall this off to your IP only.**
 
