@@ -10,10 +10,7 @@ else
 fi
 
 # wait for server
-until $(curl --output /dev/null --silent --head --fail $LEMMY_DOMAIN); do
-    printf '.'
-    sleep 5
-done
+while [[ "$(curl -kso /dev/null -w '%{http_code}' https://$LEMMY_DOMAIN/setup)" != "200" ]]; do sleep 5; done
 
 # test the frontend contains thge lemmy setup page
 fe_response=$(curl -L -k -s  $LEMMY_DOMAIN)

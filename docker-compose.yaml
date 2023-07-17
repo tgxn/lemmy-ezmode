@@ -114,7 +114,7 @@ services:
         )"
       - "traefik.http.routers.lemmy_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_https_net.tls.certResolver=cert_resolver"
-      - "traefik.http.routers.lemmy_https_net.middlewares=lemmy_site@file"
+      - "traefik.http.routers.lemmy_https_net.middlewares=secure_site@file,rate_limits@file"
 
       # Lemmy Internet HTTP Redirect
       - "traefik.http.routers.lemmy_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"
@@ -158,7 +158,7 @@ services:
         )"
       - "traefik.http.routers.lemmy_ui_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_ui_https_net.tls.certResolver=cert_resolver"
-      - "traefik.http.routers.lemmy_ui_https_net.middlewares=lemmy_site@file"
+      - "traefik.http.routers.lemmy_ui_https_net.middlewares=secure_site@file,rate_limits@file"
 
       # Lemmy Internet HTTP Redirect
       - "traefik.http.routers.lemmy_ui_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"

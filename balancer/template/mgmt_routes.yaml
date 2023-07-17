@@ -8,7 +8,7 @@ http:
         scheme: https
         permanent: true
     
-    lemmy_site:
+    secure_site:
       headers:
         stsIncludeSubdomains: false
         stsPreload: true
@@ -18,6 +18,8 @@ http:
           server: ""
         frameDeny: true
         browserXssFilter: true
+    
+    rate_limits:
       rateLimit:
         average: 100
         burst: 50
