@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Lemmy DB",
+      "Group": "Servers",
+      "Port": 5432,
+      "Username": "lemmy",
+      "Host": "postgres",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "postgres"
+    }
+  }
+}

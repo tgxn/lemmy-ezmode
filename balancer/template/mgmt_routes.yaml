@@ -25,3 +25,16 @@ http:
         - traefik
       priority: 1
       rule: "PathPrefix(`/`)"
+
+    pg_admin:
+      service: pg_admin
+      entryPoints:
+        - pg_admin
+      rule: "PathPrefix(`/`)"
+
+  services:
+
+    pg_admin:
+      loadBalancer:
+        servers:
+          - url: "http://pg_admin"

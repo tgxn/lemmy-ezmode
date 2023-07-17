@@ -29,7 +29,8 @@ services:
       - "./volumes/balancer/certs:/certs"
       - "./volumes/balancer/logs/:/logs"
     ports:
-      - "81:81"
+      - "81:81" # Traefik Management
+      - "82:82" # pgAdmin Container
       - "80:80"
       - "443:443"
 
@@ -46,6 +47,17 @@ services:
       - ./config/postgresql.conf:/etc/postgresql.conf
     restart: always
   
+  pg_admin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - PGADMIN_SERVER_JSON_FILE=/pgadmin4/lemmy-servers.json
+    volumes:
+      - ./config/servers.json:/pgadmin4/lemmy-servers.json
+    networks:
+      - lemmy-traefik-net
+
   pictrs:
     image: asonix/pictrs:0.3.3
     depends_on:

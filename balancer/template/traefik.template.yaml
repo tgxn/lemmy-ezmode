@@ -22,6 +22,8 @@ entryPoints:
   ## these should NOT be publically accessible
   traefik:
     address: ":81"
+  pg_admin:
+    address: ":82"
     
 api:
   dashboard: true
