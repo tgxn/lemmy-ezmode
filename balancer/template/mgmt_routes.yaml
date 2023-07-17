@@ -14,7 +14,7 @@ http:
         isDevelopment: false
         customResponseHeaders:
           server: ""
-        frameDeny: true
+        frameDeny: false
         browserXssFilter: true
 
   routers:

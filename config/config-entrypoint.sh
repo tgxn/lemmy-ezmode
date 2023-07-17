@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Install Config with Variables from ENV
+# This manufactures a config file for Lemmy from environment variables.
+
 cat >/config/config.hjson <<EOL
 {
     database: {
@@ -21,6 +22,5 @@ sed -i "s/POSTGRES_PW/$POSTGRES_PASS/g" /config/config.hjson
 sed -i "s/BASE_URL/$LEMMY_DOMAIN/g" /config/config.hjson
 sed -i "s/PICTRS_API_KEY/$PICTRS_API_KEY/g" /config/config.hjson
 
-cat /config/config.hjson
-
+# Start Normal Lemmy Server
 /app/lemmy

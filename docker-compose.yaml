@@ -7,9 +7,6 @@ networks:
     driver: bridge
   lemmy-private-net:
     driver: bridge
-  lemmy-net:
-    driver: bridge
-    internal: true
 
 services:
 
@@ -46,7 +43,6 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASS}
     networks:
       - lemmy-private-net
-      - lemmy-net
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
       - ./config/postgresql.conf:/etc/postgresql.conf
@@ -70,8 +66,8 @@ services:
     image: dessalines/lemmy:${LEMMY_VERSION}
     command: /config/entrypoint.sh
     networks:
-      - lemmy-public-net
       - lemmy-private-net
+      - lemmy-public-net
     restart: always
     environment:
       #- RUST_LOG="warn,lemmy_server=debug,lemmy_api=debug,lemmy_api_common=debug,lemmy_api_crud=debug,lemmy_apub=debug,lemmy_db_schema=debug,lemmy_db_views=debug,lemmy_db_views_actor=debug,lemmy_db_views_moderator=debug,lemmy_routes=debug,lemmy_utils=debug,lemmy_websocket=debug"
@@ -129,8 +125,8 @@ services:
       - balancer
       - lemmy
     networks:
-      - lemmy-public-net
       - lemmy-private-net
+      - lemmy-public-net
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=lemmy-public-net"
