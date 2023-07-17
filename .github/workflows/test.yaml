@@ -20,6 +20,8 @@ jobs:
         run: |
           rm ./volumes -rf
 
+          host-manager -add test.local 127.0.0.1
+
           chmod a+x ./config/config-entrypoint.sh
           chmod a+x ./test/test.sh
 
