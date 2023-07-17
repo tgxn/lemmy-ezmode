@@ -21,6 +21,8 @@ There are a couple of ways to deploy Lemmy, I like deploying it using Traefik as
 - Lemmy & Lemmy-UI Server
  > These run on the docker network, and are not exposed to the host.
 
+ ![Lemmy New Instance Page](./docs/images/lemmy-setup.png)
+
 ## Admin Services
 These bind to local ports, and should only be accessible from your IPs.
 
@@ -29,9 +31,12 @@ These bind to local ports, and should only be accessible from your IPs.
 - Traefik Admin Panel
  > Runs on port 81
 
+![Traefik Admin Panel](./docs/images/traefik-panel.png)
+
 - pgAdmin4 Container
  > Runs on port 82
 
+![pgAdmin4 Admin Panel](./docs/images/pgadmin-panel.png)
 
 # What/How
 
