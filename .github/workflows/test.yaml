@@ -21,6 +21,7 @@ jobs:
           rm ./volumes -rf
 
           chmod a+x ./config/config-entrypoint.sh
+          chmod a+x ./test/test.sh
 
           echo "COMPOSE_PROJECT_NAME=lemmy_ezmode"       > .env
 

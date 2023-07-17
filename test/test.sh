@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # load .env file
 envFile=".env"
@@ -7,6 +8,12 @@ if [ -f "$envFile" ]; then
 else 
     echo "$envFile not found."
 fi
+
+# wait for server
+until $(curl --output /dev/null --silent --head --fail $LEMMY_DOMAIN); do
+    printf '.'
+    sleep 5
+done
 
 # test the frontend contains thge lemmy setup page
 fe_response=$(curl -L -k -s  $LEMMY_DOMAIN)
