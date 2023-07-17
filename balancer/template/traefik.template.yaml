@@ -1,0 +1,52 @@
+## traefik.yaml
+
+log:
+  level: INFO
+  filePath: "/logs/traefik.log"
+
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+entryPoints:
+  
+  ## publish these
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+    forwardedHeaders:
+      # trust cloudflare forwarded IPs
+      trustedIPs: "173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.0.0/13,131.0.72.0/22"
+  
+  ## these should NOT be publically accessible
+  traefik:
+    address: ":81"
+    
+api:
+  dashboard: true
+  insecure: true
+  
+# file backend
+providers:
+  file:
+    directory: "/routes"
+    watch: true
+
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedbydefault: false
+
+accessLog:
+  filePath: "/logs/access.log"
+  bufferingSize: 100
+
+certificatesResolvers:
+  cert_resolver:
+    acme:
+      email: "${LETSENCRYPT_EMAIL}"
+      storage: "/certs/acme.json"
+      caServer: "${TRAEFIK_ACME_CA_SERVER}"
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 2

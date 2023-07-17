@@ -1,0 +1,27 @@
+http:
+
+  # Redirect to https
+  middlewares:
+    redirect_https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    secure_site:
+      headers:
+        stsIncludeSubdomains: false
+        stsPreload: true
+        stsSeconds: 31536000
+        isDevelopment: false
+        customResponseHeaders:
+          server: ""
+        frameDeny: true
+        browserXssFilter: true
+
+  routers:
+
+    traefik:
+      service: api@internal
+      entryPoints:
+        - traefik
+      priority: 1
+      rule: "PathPrefix(`/`)"

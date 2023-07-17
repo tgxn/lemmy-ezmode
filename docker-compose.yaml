@@ -1,0 +1,162 @@
+# https://github.com/LemmyNet/lemmy-ui/issues/876
+
+version: "3.6"
+
+networks:
+  lemmy-public-net:
+    driver: bridge
+  lemmy-private-net:
+    driver: bridge
+  lemmy-net:
+    driver: bridge
+    internal: true
+
+services:
+
+  # Balancer/Router
+  balancer:
+    image: balancer:local
+    networks:
+      - lemmy-public-net
+    build:
+      context: ./balancer
+      dockerfile: Dockerfile
+    environment:
+      # for LetsEncrypt
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      TRAEFIK_ACME_CA_SERVER: ${TRAEFIK_ACME_CA_SERVER}
+      
+      # for CloudFlare DNS Validation
+      CLOUDFLARE_EMAIL: ${TRAEFIK_CF_API_EMAIL}
+      CLOUDFLARE_DNS_API_TOKEN: ${TRAEFIK_CF_DNS_API_TOKEN}
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro" # mount the docker socket
+      - "./volumes/balancer/certs:/certs"
+      - "./volumes/balancer/logs/:/logs"
+    ports:
+      - "81:81"
+      - "80:80"
+      - "443:443"
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=lemmy
+      - POSTGRES_DB=lemmy
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+    networks:
+      - lemmy-private-net
+      - lemmy-net
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql.conf
+    restart: always
+  
+  pictrs:
+    image: asonix/pictrs:0.3.3
+    depends_on:
+      - balancer
+    user: 991:991
+    networks:
+      - lemmy-private-net
+    environment:
+      - PICTRS__SERVER__API_KEY=${PICTRS_API_KEY}
+    volumes:
+      - ./volumes/pictrs:/mnt
+    restart: always
+    mem_limit: 690m
+
+  lemmy:
+    image: dessalines/lemmy:${LEMMY_VERSION}
+    command: /config/entrypoint.sh
+    networks:
+      - lemmy-public-net
+      - lemmy-private-net
+    restart: always
+    environment:
+      #- RUST_LOG="warn,lemmy_server=debug,lemmy_api=debug,lemmy_api_common=debug,lemmy_api_crud=debug,lemmy_apub=debug,lemmy_db_schema=debug,lemmy_db_views=debug,lemmy_db_views_actor=debug,lemmy_db_views_moderator=debug,lemmy_routes=debug,lemmy_utils=debug,lemmy_websocket=debug"
+      #- RUST_BACKTRACE=full
+
+      - PICTRS_API_KEY=${PICTRS_API_KEY}
+      - LEMMY_DOMAIN=${LEMMY_DOMAIN}
+      - POSTGRES_PASS=${POSTGRES_PASS}
+    volumes:
+      - ./config/config-entrypoint.sh:/config/entrypoint.sh
+    depends_on:
+      - balancer
+      - postgres
+      - pictrs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=lemmy-public-net"
+      - "traefik.http.services.lemmy.loadbalancer.server.port=8536"
+
+      # Lemmy UI Internet HTTPS
+      - "traefik.http.routers.lemmy_https_net.rule=Host(`${LEMMY_DOMAIN}`) && (
+            (
+                HeadersRegexp(`Accept`, `^application/.*$$`)
+            ) ||
+            (
+                Method(`POST`)
+            ) ||
+            (
+                PathPrefix(`/api`) ||
+                PathPrefix(`/pictrs`) ||
+                PathPrefix(`/feeds`) ||
+                PathPrefix(`/nodeinfo`) ||
+                PathPrefix(`/.well-known`)
+            )
+        )"
+      - "traefik.http.routers.lemmy_https_net.entrypoints=https"
+      - "traefik.http.routers.lemmy_https_net.tls.certResolver=cert_resolver"
+      - "traefik.http.routers.lemmy_https_net.middlewares=secure_site@file"
+
+      # Lemmy Internet HTTP Redirect
+      - "traefik.http.routers.lemmy_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"
+      - "traefik.http.routers.lemmy_http_redirect_net.entrypoints=http"
+      - "traefik.http.routers.lemmy_http_redirect_net.middlewares=redirect_https@file"
+
+  lemmy_ui:
+    image: dessalines/lemmy-ui:${LEMMY_UI_VERSION}
+    restart: always
+    environment:
+      - LEMMY_UI_LEMMY_INTERNAL_HOST=lemmy:8536
+      - LEMMY_UI_LEMMY_EXTERNAL_HOST=${LEMMY_DOMAIN}
+      - LEMMY_UI_HTTPS=false
+    volumes:
+      - ./volumes/lemmy-ui/extra_themes:/app/extra_themes
+    depends_on:
+      - balancer
+      - lemmy
+    networks:
+      - lemmy-public-net
+      - lemmy-private-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=lemmy-public-net"
+      - "traefik.http.services.lemmy_ui.loadbalancer.server.port=1234"
+
+      # Lemmy UI Internet HTTPS
+      - "traefik.http.routers.lemmy_ui_https_net.rule=Host(`${LEMMY_DOMAIN}`) && !(
+            (
+                HeadersRegexp(`Accept`, `^application/.*$$`)
+            ) ||
+            (
+                Method(`POST`)
+            ) ||
+            (
+                PathPrefix(`/api`) ||
+                PathPrefix(`/pictrs`) ||
+                PathPrefix(`/feeds`) ||
+                PathPrefix(`/nodeinfo`) ||
+                PathPrefix(`/.well-known`)
+            )
+        )"
+      - "traefik.http.routers.lemmy_ui_https_net.entrypoints=https"
+      - "traefik.http.routers.lemmy_ui_https_net.tls.certResolver=cert_resolver"
+      - "traefik.http.routers.lemmy_ui_https_net.middlewares=secure_site@file"
+
+      # Lemmy Internet HTTP Redirect
+      - "traefik.http.routers.lemmy_ui_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"
+      - "traefik.http.routers.lemmy_ui_http_redirect_net.entrypoints=http"
+      - "traefik.http.routers.lemmy_ui_http_redirect_net.middlewares=redirect_https@file"
