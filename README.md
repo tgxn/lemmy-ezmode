@@ -13,6 +13,13 @@ I have added some really basic tests to make sure this stack always brings up a 
 3. Start: `docker-compose up -d`
 4. Access: Visit the `LEMMY_BASE` URL
 
+# Updating
+
+1. Pull: `git pull`
+2. Update: `docker-compose pull`
+3. Recreate: `docker-compose up -d --build --force-recreate`
+
+
 # Included Services
 
 ## Lemmy Services
