@@ -12,6 +12,7 @@ concurrency:
 jobs:
   test_stack:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v3
@@ -20,7 +21,7 @@ jobs:
         run: |
           rm ./volumes -rf
 
-          host-manager -add test.local 127.0.0.1
+          echo '127.0.0.1 test.local' | sudo tee -a /etc/hosts
 
           chmod a+x ./config/config-entrypoint.sh
           chmod a+x ./test/test.sh
