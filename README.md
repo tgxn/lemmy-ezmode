@@ -44,9 +44,9 @@ Back up the `./volumes` directory, along with your `.env` and `config/lemmy.hjso
 
 That should be it. More complex backup scripts to come...
 
-# CloudFlare DNS Verification
+# CloudFlare DNS Verification (Custom AF)
 
-Traefik supports DNS verification for LetsEncrypt, which means you can get a valid SSL certificate without exposing port 80 to the internet.
+Traefik also supports DNS verification for LetsEncrypt, which means you can get a valid SSL certificate using DNS instead of http, if you need to.
 
 If you wnat to enable CloudFlare DNS Validaiton for your Lemmy Domain, you can add the uncomment and configure the following in the `.env` file:
 ```sh
