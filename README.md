@@ -1,3 +1,5 @@
+[![test-stack](https://github.com/tgxn/lemmy-ezmode/actions/workflows/test.yaml/badge.svg)](https://github.com/tgxn/lemmy-ezmode/actions/workflows/test.yaml)
+
 # Lemmy EZ-Mode
 
 The idea here is you clone this repo, and configure your `.env` and then bring the compose stack online, and you should have a functioning lemmy instance.
@@ -70,7 +72,7 @@ You can optionally configure cloudflare credentials to automate SSL Certificate 
 Either
 
 - add the container to the same network from this stack:
-```
+```yaml
 networks:
   lemmy-traefik-net:
     external: true
@@ -82,7 +84,7 @@ networks:
 # I fucked up and want to reset everything
 
 take the stack down, reset the repo, and rm any persistent volumes (this will WIPE ALL data)
-```
+```sh
 docker-compose down
 git reset --hard HEAD # optionally if you cloned this with git.
 rm volumes/ -R
@@ -91,6 +93,6 @@ rm config/lemmy.hjson # if you want to reset lemmy config too
 
 then update/edit your .env, and lemmy.hjson (if you didn't delete it) and you can try again:
 
-```
+```sh
 docker-compose up -d
 ```
