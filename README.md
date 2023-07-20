@@ -44,6 +44,20 @@ Back up the ./volumes directory, along with your `.env` and `config/lemmy.hjson`
 
 That should be it. More complex backup scripts to come...
 
+# CloudFlare DNS Verification
+
+Traefik supports DNS verification for LetsEncrypt, which means you can get a valid SSL certificate without exposing port 80 to the internet.
+
+If you wnat to enable CloudFlare DNS Validaiton for your Lemmy Domain, you can add the uncomment and configure the following in the `.env` file:
+```sh
+#TRAEFIK_CF_API_EMAIL=
+#TRAEFIK_CF_DNS_API_TOKEN=
+```
+
+This will enable the CloudFlare DNS Provider for Traefik, and automatically verify your domain using DNS.
+There is more documentation on this at the [Traefik Docs](https://doc.traefik.io/traefik/https/acme/#dnschallenge) and [LEGO CloudFlare Docs](https://go-acme.github.io/lego/dns/cloudflare/)
+
+
 # Included Services
 
 ## Lemmy Services
