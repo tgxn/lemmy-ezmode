@@ -78,3 +78,19 @@ networks:
 
 - add manual config for the backend to `mgmt_routes.yaml`, you can use pgadmin as an example
     each backend will need one service (to tell traefik where the backend is) and one router (to tell traefik which traffic to send to the backend)
+
+# I fucked up and want to reset everything
+
+take the stack down, reset the repo, and rm any persistent volumes (this will WIPE ALL data)
+```
+docker-compose down
+git reset --hard HEAD # optionally if you cloned this with git.
+rm volumes/ -R
+rm config/lemmy.hjson # if you want to reset lemmy config too
+```
+
+then update/edit your .env, and lemmy.hjson (if you didn't delete it) and you can try again:
+
+```
+docker-compose up -d
+```
