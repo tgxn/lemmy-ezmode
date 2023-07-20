@@ -29,6 +29,10 @@ I have added some really basic tests to make sure this stack always brings up a 
 
 You can edit this file to configure your lemmy instance further.
 
+## SMTP / Custom Docker Services
+
+Docker-Compose supports an "Overrides" file, which is used to add additional services to the stack, or override existing services. This means anything in `docker-compose.override.yaml` will be merged with `docker-compose.yaml` when you run `docker-compose up -d`.
+
 There are also examples for SMTP in `docker-compose.override.example.yaml`
 Make a copy of this file to `docker-compose.override.yaml`, then you can uncomment whichever SMTP service you want to use. Or even add your own custom services!
 
