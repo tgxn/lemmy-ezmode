@@ -29,8 +29,14 @@ I have added some really basic tests to make sure this stack always brings up a 
 
 You can edit this file to configure your lemmy instance further.
 
-There are also examples for SMTP in docker-compose.yaml, you could add some to an ovverrides file.
+There are also examples for SMTP in `docker-compose.override.example.yaml`
+Make a copy of this file to `docker-compose.override.yaml`, then you can uncomment whichever SMTP service you want to use. Or even add your own custom services!
 
+# Data / Backup
+
+Back up the ./volumes directory, along with your `.env` and `config/lemmy.hjson` files.
+
+That should be it. More complex backup scripts to come...
 
 # Included Services
 

@@ -1,0 +1,47 @@
+## copy this and put it as `docker-compose.override.yaml`
+
+services:
+  ## example mail forwarders
+  ## use one of these configs and update lemmy.hjson with appropriate `email` config
+
+  ## postfix direct outbound relay
+  ## using https://hub.docker.com/r/mwader/postfix-relay/
+  postfix:
+    image: mwader/postfix-relay:latest
+    restart: always
+    networks:
+      - lemmy-traefik-net # add to the lemmy network
+    environment:
+      - POSTFIX_myhostname=lemmy.tgxn.local
+      # - OPENDKIM_DOMAINS=smtp.domain.tld
+
+  ## sendgrid relay
+  ## using https://github.com/fametec/postfix-sendgrid
+
+  # sendgrid:
+  #   image: fametec/postfix-sendgrid:latest
+  #   restart: unless-stopped
+  #   networks:
+  #     - lemmy-traefik-net # add to the lemmy network
+  #   environment:
+  #     SENDGRID_USER: apikey
+  #     SENDGRID_PASS: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  #   volumes:
+  #     - ./volumes/spool:/var/spool/postfix
+
+  ## smtp -> smtp relay
+  ## using https://github.com/namshi/docker-smtp
+
+  # relay:
+  #   image: namshi/smtp:latest
+  #   container_name: core_mail_relay
+  #   restart: always
+  #   networks:
+  #     - lemmy-traefik-net # add to the lemmy network
+  #   environment:
+  #     RELAY_DOMAINS: my.domain.com
+  #     SMARTHOST_ADDRESS: smtp.example.com # upstream SMTP
+  #     SMARTHOST_PORT: 587
+  #     SMARTHOST_USER: myuser
+  #     SMARTHOST_PASSWORD: mypassword
+  #     SMARTHOST_ALIASES: my.domain.com

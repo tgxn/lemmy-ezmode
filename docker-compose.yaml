@@ -99,19 +99,19 @@ services:
 
       # Lemmy UI Internet HTTPS
       - "traefik.http.routers.lemmy_https_net.rule=Host(`${LEMMY_DOMAIN}`) && (
-        (
-        HeadersRegexp(`Accept`, `^application/.*$$`)
-        ) ||
-        (
-        Method(`POST`)
-        ) ||
-        (
-        PathPrefix(`/api`) ||
-        PathPrefix(`/pictrs`) ||
-        PathPrefix(`/feeds`) ||
-        PathPrefix(`/nodeinfo`) ||
-        PathPrefix(`/.well-known`)
-        )
+          (
+            HeadersRegexp(`Accept`, `^application/.*$$`)
+          ) ||
+          (
+            Method(`POST`)
+          ) ||
+          (
+            PathPrefix(`/api`) ||
+            PathPrefix(`/pictrs`) ||
+            PathPrefix(`/feeds`) ||
+            PathPrefix(`/nodeinfo`) ||
+            PathPrefix(`/.well-known`)
+          )
         )"
       - "traefik.http.routers.lemmy_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_https_net.tls.certResolver=cert_resolver"
@@ -143,19 +143,19 @@ services:
 
       # Lemmy UI Internet HTTPS
       - "traefik.http.routers.lemmy_ui_https_net.rule=Host(`${LEMMY_DOMAIN}`) && !(
-        (
-        HeadersRegexp(`Accept`, `^application/.*$$`)
-        ) ||
-        (
-        Method(`POST`)
-        ) ||
-        (
-        PathPrefix(`/api`) ||
-        PathPrefix(`/pictrs`) ||
-        PathPrefix(`/feeds`) ||
-        PathPrefix(`/nodeinfo`) ||
-        PathPrefix(`/.well-known`)
-        )
+          (
+            HeadersRegexp(`Accept`, `^application/.*$$`)
+          ) ||
+          (
+            Method(`POST`)
+          ) ||
+          (
+            PathPrefix(`/api`) ||
+            PathPrefix(`/pictrs`) ||
+            PathPrefix(`/feeds`) ||
+            PathPrefix(`/nodeinfo`) ||
+            PathPrefix(`/.well-known`)
+          )
         )"
       - "traefik.http.routers.lemmy_ui_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_ui_https_net.tls.certResolver=cert_resolver"
@@ -165,31 +165,3 @@ services:
       - "traefik.http.routers.lemmy_ui_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"
       - "traefik.http.routers.lemmy_ui_http_redirect_net.entrypoints=http"
       - "traefik.http.routers.lemmy_ui_http_redirect_net.middlewares=redirect_https@file"
-
-  ## example mail forwarders
-
-  ### postfix-relay
-
-  # use one of these configs and update lemmy.hjson with appropriate smtp
-
-  # using https://hub.docker.com/r/mwader/postfix-relay/
-  # postfix:
-  #   image: mwader/postfix-relay:latest
-  #   restart: always
-  #   networks:
-  #     - lemmy-traefik-net # add to the lemmy network
-  #   environment:
-  #     - POSTFIX_myhostname=lemmy.tgxn.local
-  #     # - OPENDKIM_DOMAINS=smtp.domain.tld
-
-  # using https://github.com/fametec/postfix-sendgrid
-  # sendgrid:
-  #   image: fametec/postfix-sendgrid:latest
-  #   restart: unless-stopped
-  #   networks:
-  #     - lemmy-traefik-net # add to the lemmy network
-  #   environment:
-  #     SENDGRID_USER: apikey
-  #     SENDGRID_PASS: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  #   volumes:
-  #     - ./volumes/spool:/var/spool/postfix

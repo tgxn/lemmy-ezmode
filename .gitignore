@@ -1,3 +1,4 @@
 volumes/
 .env
 config/lemmy.hjson
+docker-compose.override.yaml
