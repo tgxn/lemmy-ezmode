@@ -55,3 +55,18 @@ This uses a Traefik server to reverse proxy to the Lemmy server.
 It uses the Traefik ACME challenge to automatically fetch and renew your certs.
 
 You can optionally configure cloudflare credentials to automate SSL Certificate Verification with DNS.
+
+
+# I want to add more servers to backend
+
+Either
+
+- add the container to the same network from this stack:
+```
+networks:
+  lemmy-traefik-net:
+    external: true
+```
+
+- add manual config for the backend to `mgmt_routes.yaml`, you can use pgadmin as an example
+    each backend will need one service (to tell traefik where the backend is) and one router (to tell traefik which traffic to send to the backend)

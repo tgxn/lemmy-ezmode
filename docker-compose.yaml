@@ -4,10 +4,10 @@ version: "3.6"
 
 networks:
   lemmy-traefik-net:
+    name: lemmy-traefik-net
     driver: bridge
 
 services:
-
   # Balancer/Router
   balancer:
     image: balancer:local
@@ -20,7 +20,7 @@ services:
       # for LetsEncrypt
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       TRAEFIK_ACME_CA_SERVER: ${TRAEFIK_ACME_CA_SERVER}
-      
+
       # for CloudFlare DNS Validation
       CLOUDFLARE_EMAIL: ${TRAEFIK_CF_API_EMAIL:-""}
       CLOUDFLARE_DNS_API_TOKEN: ${TRAEFIK_CF_DNS_API_TOKEN:-""}
@@ -46,7 +46,7 @@ services:
       - ./volumes/postgres:/var/lib/postgresql/data
       - ./config/postgresql.conf:/etc/postgresql.conf
     restart: always
-  
+
   pg_admin:
     image: dpage/pgadmin4:latest
     environment:
@@ -86,6 +86,7 @@ services:
       - LEMMY_DOMAIN=${LEMMY_DOMAIN}
       - POSTGRES_PASS=${POSTGRES_PASS}
     volumes:
+      - ./config:/userConf
       - ./config/config-entrypoint.sh:/config/entrypoint.sh
     depends_on:
       - balancer
@@ -98,19 +99,19 @@ services:
 
       # Lemmy UI Internet HTTPS
       - "traefik.http.routers.lemmy_https_net.rule=Host(`${LEMMY_DOMAIN}`) && (
-            (
-                HeadersRegexp(`Accept`, `^application/.*$$`)
-            ) ||
-            (
-                Method(`POST`)
-            ) ||
-            (
-                PathPrefix(`/api`) ||
-                PathPrefix(`/pictrs`) ||
-                PathPrefix(`/feeds`) ||
-                PathPrefix(`/nodeinfo`) ||
-                PathPrefix(`/.well-known`)
-            )
+        (
+        HeadersRegexp(`Accept`, `^application/.*$$`)
+        ) ||
+        (
+        Method(`POST`)
+        ) ||
+        (
+        PathPrefix(`/api`) ||
+        PathPrefix(`/pictrs`) ||
+        PathPrefix(`/feeds`) ||
+        PathPrefix(`/nodeinfo`) ||
+        PathPrefix(`/.well-known`)
+        )
         )"
       - "traefik.http.routers.lemmy_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_https_net.tls.certResolver=cert_resolver"
@@ -142,19 +143,19 @@ services:
 
       # Lemmy UI Internet HTTPS
       - "traefik.http.routers.lemmy_ui_https_net.rule=Host(`${LEMMY_DOMAIN}`) && !(
-            (
-                HeadersRegexp(`Accept`, `^application/.*$$`)
-            ) ||
-            (
-                Method(`POST`)
-            ) ||
-            (
-                PathPrefix(`/api`) ||
-                PathPrefix(`/pictrs`) ||
-                PathPrefix(`/feeds`) ||
-                PathPrefix(`/nodeinfo`) ||
-                PathPrefix(`/.well-known`)
-            )
+        (
+        HeadersRegexp(`Accept`, `^application/.*$$`)
+        ) ||
+        (
+        Method(`POST`)
+        ) ||
+        (
+        PathPrefix(`/api`) ||
+        PathPrefix(`/pictrs`) ||
+        PathPrefix(`/feeds`) ||
+        PathPrefix(`/nodeinfo`) ||
+        PathPrefix(`/.well-known`)
+        )
         )"
       - "traefik.http.routers.lemmy_ui_https_net.entrypoints=https"
       - "traefik.http.routers.lemmy_ui_https_net.tls.certResolver=cert_resolver"
