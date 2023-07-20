@@ -40,7 +40,7 @@ This way, you don't need to worry if I make changes to `docker-compose.yaml` fro
 
 # Data / Backup
 
-Back up the ./volumes directory, along with your `.env` and `config/lemmy.hjson` files.
+Back up the `./volumes` directory, along with your `.env` and `config/lemmy.hjson` files.
 
 That should be it. More complex backup scripts to come...
 
