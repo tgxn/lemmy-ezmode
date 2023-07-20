@@ -27,21 +27,21 @@ cat >$USER_CONFIG <<EOL
       url: "http://pictrs:8080/"
       api_key: "PICTRS_API_KEY"
     }
-    # for postfix
+    ## for postfix
     # email: {
     #   smtp_server: postfix:25
     #   # Address to send emails from, eg "noreply@your-instance.com"
     #   smtp_from_address: "noreply@example.com"
     #   tls_type: "none"
     # }
-    # for sendgrid
+    ## for sendgrid
     # email: {
     #   smtp_server: sendgrid:25
     #   # Address to send emails from, eg "noreply@your-instance.com"
     #   smtp_from_address: "noreply@example.com"
     #   tls_type: "none"
     # }
-    # for smtp->smtp
+    ## for smtp->smtp
     # email: {
     #   smtp_server: relay:25
     #   # Address to send emails from, eg "noreply@your-instance.com"
