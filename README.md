@@ -25,7 +25,7 @@ I have added some really basic tests to make sure this stack always brings up a 
 
 # Configuring
 
-`config/lemmy.hjson` will be generated on the first run, or if one is not found in the config directory.
+`config/lemmy.hjson` will be generated on the first run, as long as one is not found in the config directory.
 
 You can edit this file to configure your lemmy instance further.
 
