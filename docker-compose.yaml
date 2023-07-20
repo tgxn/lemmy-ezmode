@@ -86,7 +86,7 @@ services:
       - LEMMY_DOMAIN=${LEMMY_DOMAIN}
       - POSTGRES_PASS=${POSTGRES_PASS}
     volumes:
-      - ./config:/userConf
+      - ./config:/user-config # maps the config dfirectory so we can check if there's a `lemmy.hjson` file there
       - ./config/config-entrypoint.sh:/config/entrypoint.sh
     depends_on:
       - balancer
@@ -165,3 +165,19 @@ services:
       - "traefik.http.routers.lemmy_ui_http_redirect_net.rule=Host(`${LEMMY_DOMAIN}`)"
       - "traefik.http.routers.lemmy_ui_http_redirect_net.entrypoints=http"
       - "traefik.http.routers.lemmy_ui_http_redirect_net.middlewares=redirect_https@file"
+
+  ## example mail forwarders
+
+  ### postfix-relay
+
+  # use one of these configs and update lemmy.hjson with appropriate smtp
+
+  # using https://hub.docker.com/r/mwader/postfix-relay/
+  # postfix:
+  #   image: mwader/postfix-relay:latest
+  #   restart: always
+  #   networks:
+  #     - lemmy-traefik-net # add to the lemmy network
+  #   environment:
+  #     - POSTFIX_myhostname=lemmy.tgxn.local
+  #     # - OPENDKIM_DOMAINS=smtp.domain.tld

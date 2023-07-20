@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USER_CONFIG=/userConf/lemmy.hjson
+USER_CONFIG=/user-config/lemmy.hjson
 LEMMY_CONFIG=/config/config.hjson
 
 # This manufactures a config file for Lemmy from environment variables.
@@ -22,11 +22,18 @@ cat >$USER_CONFIG <<EOL
       pool_size: 25
     }
     hostname: "BASE_URL"
-    port: 8536,
+    port: 8536
     pictrs: {
       url: "http://pictrs:8080/"
       api_key: "PICTRS_API_KEY"
     }
+    # for postfix
+    # email: {
+    #   smtp_server: postfix:25
+    #   # Address to send emails from, eg "noreply@your-instance.com"
+    #   smtp_from_address: "noreply@example.com"
+    #   tls_type: "none"
+    # }
 }
 EOL
 

@@ -21,6 +21,14 @@ I have added some really basic tests to make sure this stack always brings up a 
 2. Update: `docker-compose pull`
 3. Recreate: `docker-compose up -d --build --force-recreate`
 
+# Configuring
+
+`config/lemmy.hjson` will be generated on the first run, or if one is not found in the config directory.
+
+You can edit this file to configure your lemmy instance further.
+
+There are also examples for SMTP in docker-compose.yaml, you could add some to an ovverrides file.
+
 
 # Included Services
 
