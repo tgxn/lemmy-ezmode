@@ -181,3 +181,15 @@ services:
   #   environment:
   #     - POSTFIX_myhostname=lemmy.tgxn.local
   #     # - OPENDKIM_DOMAINS=smtp.domain.tld
+
+  # using https://github.com/fametec/postfix-sendgrid
+  # sendgrid:
+  #   image: fametec/postfix-sendgrid:latest
+  #   restart: unless-stopped
+  #   networks:
+  #     - lemmy-traefik-net # add to the lemmy network
+  #   environment:
+  #     SENDGRID_USER: apikey
+  #     SENDGRID_PASS: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  #   volumes:
+  #     - ./volumes/spool:/var/spool/postfix

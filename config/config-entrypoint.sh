@@ -34,6 +34,13 @@ cat >$USER_CONFIG <<EOL
     #   smtp_from_address: "noreply@example.com"
     #   tls_type: "none"
     # }
+    # for sendgrid
+    # email: {
+    #   smtp_server: sendgrid:25
+    #   # Address to send emails from, eg "noreply@your-instance.com"
+    #   smtp_from_address: "noreply@example.com"
+    #   tls_type: "none"
+    # }
 }
 EOL
 
