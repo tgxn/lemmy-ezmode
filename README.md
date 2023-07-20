@@ -32,6 +32,8 @@ You can edit this file to configure your lemmy instance further.
 There are also examples for SMTP in `docker-compose.override.example.yaml`
 Make a copy of this file to `docker-compose.override.yaml`, then you can uncomment whichever SMTP service you want to use. Or even add your own custom services!
 
+This way, you don't need to worry if I make changes to `docker-compose.yaml` from the repository, your custom services won't be overwritten.
+
 # Data / Backup
 
 Back up the ./volumes directory, along with your `.env` and `config/lemmy.hjson` files.
