@@ -93,7 +93,9 @@ It uses the Traefik ACME challenge to automatically fetch and renew your certs.
 You can optionally configure cloudflare credentials to automate SSL Certificate Verification with DNS.
 
 
-# I want to add more servers to backend
+# Q/A
+
+## I want to add more servers to backend
 
 Either
 
@@ -107,7 +109,7 @@ networks:
 - add manual config for the backend to `mgmt_routes.yaml`, you can use pgadmin as an example
     each backend will need one service (to tell traefik where the backend is) and one router (to tell traefik which traffic to send to the backend)
 
-# I fucked up and want to reset everything
+## It's fucked up and want to reset everything
 
 take the stack down, reset the repo, and rm any persistent volumes (this will WIPE ALL data)
 ```sh
