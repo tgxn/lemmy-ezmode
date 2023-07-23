@@ -95,48 +95,43 @@ You can optionally configure cloudflare credentials to automate SSL Certificate 
 
 # Q/A
 
-## I want to add more servers to backend
+## I want to add more servers to the same traefik proxy
 
-Either
+You can either add services to the `docker-compose.override.yaml` file, or you can run a seperate stack, and add the container to the same network.
 
-- add the container to the same network from this stack:
-```yaml
-networks:
-  lemmy-traefik-net:
-    external: true
-```
+### External Stack
 
-the container you want to expose via traefik must be on this network:
-```yaml
-    networks:
-      - lemmy-traefik-net
-```
+The external stack must import the network that Traefik is running on, and the container you want to expose must be on this network.
 
-- add manual config for the backend to `mgmt_routes.yaml`, you can use pgadmin as an example
-    each backend will need one service (to tell traefik where the backend is) and one router (to tell traefik which traffic to send to the backend)
-
-
-OR
-
-- add some similar labels to the container
+Make the following changes to your `docker-compose.yaml` file in your external stack:
 
  > (`YOUR_SERVICE` must be unique!)
 
 ```yaml
+...
+networks:
+  lemmy-traefik-net:
+    external: true
+
+services:
+  YOUR_SERVICE:
+    ...
+    networks:
+      - lemmy-traefik-net
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=lemmy-traefik-net"
 
-      - "traefik.http.services.YOUR_SERVICE.loadbalancer.server.port=1234"
+      - "traefik.http.services.YOUR_SERVICE.loadbalancer.server.port=1234" # put the port that you want published here
 
       # Internet HTTPS
-      - "traefik.http.routers.YOUR_SERVICE_https.rule=Host(`YOUR_DOMAIN`)"
+      - "traefik.http.routers.YOUR_SERVICE_https.rule=Host(`YOUR_DOMAIN`)" # change your domain name
       - "traefik.http.routers.YOUR_SERVICE_https.entrypoints=https"
       - "traefik.http.routers.YOUR_SERVICE_https.tls.certResolver=cert_resolver"
       - "traefik.http.routers.YOUR_SERVICE_https.middlewares=secure_site@file,rate_limits@file" # you can remove rate limits here if you want
 
       # Internet HTTP Redirect
-      - "traefik.http.routers.YOUR_SERVICE_http_redirect.rule=Host(`YOUR_DOMAIN`)"
+      - "traefik.http.routers.YOUR_SERVICE_http_redirect.rule=Host(`YOUR_DOMAIN`)" # change your domain name
       - "traefik.http.routers.YOUR_SERVICE_http_redirect.entrypoints=http"
       - "traefik.http.routers.YOUR_SERVICE_http_redirect.middlewares=redirect_https@file"
 ```
