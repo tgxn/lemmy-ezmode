@@ -20,8 +20,8 @@ services:
     environment:
       # for LetsEncrypt
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-      TRAEFIK_ACME_CA_SERVER: ${TRAEFIK_ACME_CA_SERVER:-"https://acme-v02.api.letsencrypt.org/directory"}
-      TRAEFIK_ACME_STAGING_CA_SERVER: ${TRAEFIK_ACME_STAGING_CA_SERVER:-"https://acme-staging-v02.api.letsencrypt.org/directory"}
+      TRAEFIK_ACME_CA_SERVER: ${TRAEFIK_ACME_CA_SERVER:-https://acme-v02.api.letsencrypt.org/directory}
+      TRAEFIK_ACME_STAGING_CA_SERVER: ${TRAEFIK_ACME_STAGING_CA_SERVER:-https://acme-staging-v02.api.letsencrypt.org/directory}
 
       # for CloudFlare DNS Validation
       CLOUDFLARE_EMAIL: ${TRAEFIK_CF_API_EMAIL:-""}
