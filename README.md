@@ -106,6 +106,12 @@ networks:
     external: true
 ```
 
+the container you want to expose via traefik must be on this network:
+```yaml
+    networks:
+      - lemmy-traefik-net
+```
+
 - add manual config for the backend to `mgmt_routes.yaml`, you can use pgadmin as an example
     each backend will need one service (to tell traefik where the backend is) and one router (to tell traefik which traffic to send to the backend)
 
