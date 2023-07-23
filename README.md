@@ -109,6 +109,32 @@ networks:
 - add manual config for the backend to `mgmt_routes.yaml`, you can use pgadmin as an example
     each backend will need one service (to tell traefik where the backend is) and one router (to tell traefik which traffic to send to the backend)
 
+
+OR
+
+- add some similar labels to the container
+
+ > (`YOUR_SERVICE` must be unique!)
+
+```yaml
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=lemmy-traefik-net"
+
+      - "traefik.http.services.YOUR_SERVICE.loadbalancer.server.port=1234"
+
+      # Internet HTTPS
+      - "traefik.http.routers.YOUR_SERVICE_https.rule=Host(`YOUR_DOMAIN`)"
+      - "traefik.http.routers.YOUR_SERVICE_https.entrypoints=https"
+      - "traefik.http.routers.YOUR_SERVICE_https.tls.certResolver=cert_resolver"
+      - "traefik.http.routers.YOUR_SERVICE_https.middlewares=secure_site@file,rate_limits@file" # you can remove rate limits here if you want
+
+      # Internet HTTP Redirect
+      - "traefik.http.routers.YOUR_SERVICE_http_redirect.rule=Host(`YOUR_DOMAIN`)"
+      - "traefik.http.routers.YOUR_SERVICE_http_redirect.entrypoints=http"
+      - "traefik.http.routers.YOUR_SERVICE_http_redirect.middlewares=redirect_https@file"
+```
+
 ## It's fucked up and want to reset everything
 
 take the stack down, reset the repo, and rm any persistent volumes **(this will WIPE ALL data)**
