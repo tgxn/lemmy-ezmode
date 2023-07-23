@@ -113,15 +113,18 @@ Make the following changes to your `docker-compose.yaml` file in your external s
 networks:
   lemmy-traefik-net:
     external: true
-
+  zipline-net:
+    name: zipline-net
 ...
 services:
-  YOUR_SERVICE:
+  whatever_your_service_is_called:
+
     ...
 
     # add in the service definition
     networks:
       - lemmy-traefik-net
+      - zipline-net
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=lemmy-traefik-net"
@@ -129,16 +132,36 @@ services:
       - "traefik.http.services.YOUR_SERVICE.loadbalancer.server.port=1234" # put the port that you want published here
 
       # Internet HTTPS
-      - "traefik.http.routers.YOUR_SERVICE_https.rule=Host(`YOUR_DOMAIN`)" # change your domain name
+      - "traefik.http.routers.YOUR_SERVICE_https.rule=Host(`YOUR_DOMAIN`)" # change your sub/domain name
       - "traefik.http.routers.YOUR_SERVICE_https.entrypoints=https"
-      - "traefik.http.routers.YOUR_SERVICE_https.tls.certResolver=cert_resolver"
+      - "traefik.http.routers.YOUR_SERVICE_https.tls.certResolver=cert_resolver" # you can set this to `cert_resolver_staging` if you want to use the staging server
       - "traefik.http.routers.YOUR_SERVICE_https.middlewares=secure_site@file,rate_limits@file" # you can remove rate limits here if you want
 
       # Internet HTTP Redirect
-      - "traefik.http.routers.YOUR_SERVICE_http_redirect.rule=Host(`YOUR_DOMAIN`)" # change your domain name
+      - "traefik.http.routers.YOUR_SERVICE_http_redirect.rule=Host(`YOUR_DOMAIN`)" # change your sub/domain name
       - "traefik.http.routers.YOUR_SERVICE_http_redirect.entrypoints=http"
       - "traefik.http.routers.YOUR_SERVICE_http_redirect.middlewares=redirect_https@file"
 ```
+
+## I want to use the ACME staging server.
+
+First, make sure you copy `docker-compose.override.example.yaml` to `docker-compose.override.yaml`
+
+Then uncomment the following lines in `docker-compose.override.yaml`:
+
+```yaml
+...
+  lemmy:
+    labels:
+      - "traefik.http.routers.lemmy_https_net.tls.certResolver=cert_resolver_staging"
+  lemmy_ui:
+    labels:
+      - "traefik.http.routers.lemmy_ui_https_net.tls.certResolver=cert_resolver_staging"
+```
+
+this will change the cert resolver to the staging server, which will not count against your rate limits.
+
+
 
 ## It's fucked up and want to reset everything
 

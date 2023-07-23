@@ -1,19 +1,28 @@
 ## copy this and put it as `docker-compose.override.yaml`
 
 services:
+  ## you can change to staging for testing
+  # lemmy:
+  #   labels:
+  #     - "traefik.http.routers.lemmy_https_net.tls.certResolver=cert_resolver_staging"
+  # lemmy_ui:
+  #   labels:
+  #     - "traefik.http.routers.lemmy_ui_https_net.tls.certResolver=cert_resolver_staging"
+
   ## example mail forwarders
   ## use one of these configs and update lemmy.hjson with appropriate `email` config
 
   ## postfix direct outbound relay
   ## using https://hub.docker.com/r/mwader/postfix-relay/
-  postfix:
-    image: mwader/postfix-relay:latest
-    restart: unless-stopped
-    networks:
-      - lemmy-traefik-net # add to the lemmy network
-    environment:
-      - POSTFIX_myhostname=lemmy.tgxn.local
-      # - OPENDKIM_DOMAINS=smtp.domain.tld
+
+  # postfix:
+  #   image: mwader/postfix-relay:latest
+  #   restart: always
+  #   networks:
+  #     - lemmy-traefik-net # add to the lemmy network
+  #   environment:
+  #     - POSTFIX_myhostname=lemmy.tgxn.local
+  #     # - OPENDKIM_DOMAINS=smtp.domain.tld
 
   ## sendgrid relay
   ## using https://github.com/fametec/postfix-sendgrid
@@ -32,15 +41,15 @@ services:
   ## smtp -> smtp relay
   ## using https://github.com/namshi/docker-smtp
 
-  # relay:
-  #   image: namshi/smtp:latest
-  #   restart: unless-stopped
-  #   networks:
-  #     - lemmy-traefik-net # add to the lemmy network
-  #   environment:
-  #     RELAY_DOMAINS: my.domain.com
-  #     SMARTHOST_ADDRESS: smtp.example.com # upstream SMTP
-  #     SMARTHOST_PORT: 587
-  #     SMARTHOST_USER: myuser
-  #     SMARTHOST_PASSWORD: mypassword
-  #     SMARTHOST_ALIASES: my.domain.com
+  relay:
+    image: namshi/smtp:latest
+    restart: always
+    networks:
+      - lemmy-traefik-net # add to the lemmy network
+    environment:
+      RELAY_DOMAINS: my.domain.com
+      SMARTHOST_ADDRESS: smtp.example.com # upstream SMTP
+      SMARTHOST_PORT: 587
+      SMARTHOST_USER: myuser
+      SMARTHOST_PASSWORD: mypassword
+      SMARTHOST_ALIASES: my.domain.com
