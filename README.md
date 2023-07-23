@@ -111,7 +111,10 @@ networks:
 
 ## It's fucked up and want to reset everything
 
-take the stack down, reset the repo, and rm any persistent volumes (this will WIPE ALL data)
+take the stack down, reset the repo, and rm any persistent volumes **(this will WIPE ALL data)**
+
+ > You might use this while developing or testing integrations, where you jsut need a clean lemmy instance
+
 ```sh
 docker-compose down
 git reset --hard HEAD # optionally if you cloned this with git.
