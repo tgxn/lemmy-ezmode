@@ -52,3 +52,11 @@ certificatesResolvers:
       dnsChallenge:
         provider: cloudflare
         delayBeforeCheck: 2
+  cert_resolver_staging:
+    acme:
+      email: "${LETSENCRYPT_EMAIL}"
+      storage: "/certs/acme.json"
+      caServer: "${TRAEFIK_ACME_STAGING_CA_SERVER}"
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 2

@@ -109,13 +109,17 @@ Make the following changes to your `docker-compose.yaml` file in your external s
 
 ```yaml
 ...
+# in the top level of the file
 networks:
   lemmy-traefik-net:
     external: true
 
+...
 services:
   YOUR_SERVICE:
     ...
+
+    # add in the service definition
     networks:
       - lemmy-traefik-net
     labels:

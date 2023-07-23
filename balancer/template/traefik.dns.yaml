@@ -52,3 +52,11 @@ certificatesResolvers:
       tlsChallenge: true
       httpChallenge:
         entryPoint: http
+  cert_resolver_staging:
+    acme:
+      email: "${LETSENCRYPT_EMAIL}"
+      storage: "/certs/acme.json"
+      caServer: "${TRAEFIK_ACME_STAGING_CA_SERVER}"
+      tlsChallenge: true
+      httpChallenge:
+        entryPoint: http
